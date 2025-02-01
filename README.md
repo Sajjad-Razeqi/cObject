@@ -36,7 +36,7 @@ $cObject = new cObject();
 // Define:
 $cObject->data1 = "Hello";
 $cObject->data2 = function(string $name){
-    echo "Hi $name";
+    echo "You're Welcome $name!";
 };
 
 // Usage:
@@ -56,9 +56,9 @@ use cObject\cObject;
 
 // Define:
 $cObject = new cObject([
-    "data1" => "Hello",
+    "data1" => "Hello<br>",
     "data2" => function(string $name){
-        echo "Hi $name";
+        echo "You're Welcome $name!";
     }
 ]);
 
@@ -102,13 +102,13 @@ use cObject\cObject;
 $cObject = new cObject();
 
 // Define:
-$cObject["data1"] = "Hello";
+$cObject["data1"] = "Hello<br>";
 $cObject["data2"] = function(string $name){
-    echo "Hi $name";
+    echo "You're Welcome $name!";
 };
 
 // Usage:
-echo $cObject->["data1"];
+echo $cObject["data1"];
 $cObject["data2"]("Sajjad");
 
 // Unset:
@@ -123,9 +123,9 @@ use cObject\cObject;
 
 // Define:
 $cObject = new cObject([
-    "data1" => "Hello",
+    "data1" => "Hello<br>",
     "data2" => function(string $name){
-        echo "Hi $name";
+        echo "hi $name!";
     }
 ]);
 $cObject->data1 = "Ok, ";
@@ -146,17 +146,17 @@ When using string casting, the cObject will convert it to JSON.
 use cObject\cObject;
 
 $cObject = new cObject([
-    "data1" => "Hello",
+    "data1" => "Hello<br>",
     "data2" => function(string $name){
-        echo "Hi $name";
+        echo "You're Welcome $name!";
     }
 ]);
 
 // ======================
-echo $cObject; // {"_": "cObject", "data1": "Hello","data2": {}}
+echo $cObject; // { "_": "cObject", "data1": "Hello", "data2": {} }
 
 // Or:
-$string = (string) $cObject; // {"_": "cObject", "data1": "Hello","data2": {}}
+$string = (string) $cObject; // { "_": "cObject", "data1": "Hello", "data2": {} }
 ```
 **Please note:** If you use string casting, any callable properties cannot be converted to a string. Additionally, after decoding the JSON string, the callable properties will be lost.
 
@@ -167,7 +167,7 @@ use cObject\cObject;
 $cObject = new cObject([
     "data1" => "Hello",
     "data2" => function(string $name){
-        echo "Hi $name";
+        echo "You're Welcome $name!";
     }
 ]);
 
