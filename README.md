@@ -34,9 +34,9 @@ use cObject\cObject;
 $cObject = new cObject();
 
 // Define:
-$cObject->data1 = "Hello";
+$cObject->data1 = "Hello, ";
 $cObject->data2 = function(string $name){
-    echo "Hi $name";
+    echo "You're Welcome $name!";
 };
 
 // Usage:
@@ -56,9 +56,9 @@ use cObject\cObject;
 
 // Define:
 $cObject = new cObject([
-    "data1" => "Hello",
+    "data1" => "Hello, ",
     "data2" => function(string $name){
-        echo "Hi $name";
+        echo "You're Welcome $name!";
     }
 ]);
 
@@ -90,6 +90,10 @@ echo $cObject->array[0];
 
 // Unset:
 unset($cObject->array[3]);
+
+// Check:
+var_dump(is_iterable($cObject->array)); // bool(true)
+var_dump(is_array($cObject->array)); // bool(true)
 ```
 
 #### Like Arrays:
@@ -102,17 +106,21 @@ use cObject\cObject;
 $cObject = new cObject();
 
 // Define:
-$cObject["data1"] = "Hello";
+$cObject["data1"] = "Hello, ";
 $cObject["data2"] = function(string $name){
-    echo "Hi $name";
+    echo "You're Welcome $name!";
 };
 
 // Usage:
-echo $cObject->["data1"];
+echo $cObject["data1"];
 $cObject["data2"]("Sajjad");
 
 // Unset:
 unset($cObject["data1"], $cObject["data2"]);
+
+// Check:
+var_dump(is_iterable($cObject)); // bool(false)
+var_dump(is_array($cObject)); // bool(false)
 ```
 
 **Warning**: This only simulates an array but is not `iterable`.
@@ -123,9 +131,9 @@ use cObject\cObject;
 
 // Define:
 $cObject = new cObject([
-    "data1" => "Hello",
+    "data1" => "Hello, ",
     "data2" => function(string $name){
-        echo "Hi $name";
+        echo "hi $name!";
     }
 ]);
 $cObject->data1 = "Ok, ";
@@ -146,17 +154,17 @@ When using string casting, the cObject will convert it to JSON.
 use cObject\cObject;
 
 $cObject = new cObject([
-    "data1" => "Hello",
+    "data1" => "Hello, ",
     "data2" => function(string $name){
-        echo "Hi $name";
+        echo "You're Welcome $name!";
     }
 ]);
 
 // ======================
-echo $cObject; // {"_": "cObject", "data1": "Hello","data2": {}}
+echo $cObject; // { "_": "cObject", "data1": "Hello", "data2": {} }
 
 // Or:
-$string = (string) $cObject; // {"_": "cObject", "data1": "Hello","data2": {}}
+$string = (string) $cObject; // { "_": "cObject", "data1": "Hello", "data2": {} }
 ```
 **Please note:** If you use string casting, any callable properties cannot be converted to a string. Additionally, after decoding the JSON string, the callable properties will be lost.
 
@@ -167,7 +175,7 @@ use cObject\cObject;
 $cObject = new cObject([
     "data1" => "Hello",
     "data2" => function(string $name){
-        echo "Hi $name";
+        echo "You're Welcome $name!";
     }
 ]);
 
@@ -175,5 +183,10 @@ $cObject = new cObject([
 $cObject->MycObjectToArray(); // return an array
 
 // Or:
-cObject::cObjectToArray($cObject); // return an array
+$TheArray = cObject::cObjectToArray($cObject); // return an array
+
+// Check:
+var_dump(is_iterable($TheArray)); // bool(true)
+var_dump(is_array($TheArray)); // bool(true)
 ```
+**Note:** This method converts an object into a real array.
