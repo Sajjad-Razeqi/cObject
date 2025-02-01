@@ -90,6 +90,10 @@ echo $cObject->array[0];
 
 // Unset:
 unset($cObject->array[3]);
+
+// Check:
+var_dump(is_iterable($cObject->array)); // bool(true)
+var_dump(is_array($cObject->array)); // bool(true)
 ```
 
 #### Like Arrays:
@@ -113,6 +117,10 @@ $cObject["data2"]("Sajjad");
 
 // Unset:
 unset($cObject["data1"], $cObject["data2"]);
+
+// Check:
+var_dump(is_iterable($cObject)); // bool(false)
+var_dump(is_array($cObject)); // bool(false)
 ```
 
 **Warning**: This only simulates an array but is not `iterable`.
@@ -175,5 +183,10 @@ $cObject = new cObject([
 $cObject->MycObjectToArray(); // return an array
 
 // Or:
-cObject::cObjectToArray($cObject); // return an array
+$TheArray = cObject::cObjectToArray($cObject); // return an array
+
+// Check:
+var_dump(is_iterable($TheArray)); // bool(true)
+var_dump(is_array($TheArray)); // bool(true)
 ```
+**Note:** This method converts an object into a real array.
