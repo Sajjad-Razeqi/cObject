@@ -34,7 +34,7 @@ use cObject\cObject;
 $cObject = new cObject();
 
 // Define:
-$cObject->data1 = "Hello";
+$cObject->data1 = "Hello, ";
 $cObject->data2 = function(string $name){
     echo "You're Welcome $name!";
 };
@@ -56,7 +56,7 @@ use cObject\cObject;
 
 // Define:
 $cObject = new cObject([
-    "data1" => "Hello<br>",
+    "data1" => "Hello, ",
     "data2" => function(string $name){
         echo "You're Welcome $name!";
     }
@@ -102,7 +102,7 @@ use cObject\cObject;
 $cObject = new cObject();
 
 // Define:
-$cObject["data1"] = "Hello<br>";
+$cObject["data1"] = "Hello, ";
 $cObject["data2"] = function(string $name){
     echo "You're Welcome $name!";
 };
@@ -123,7 +123,7 @@ use cObject\cObject;
 
 // Define:
 $cObject = new cObject([
-    "data1" => "Hello<br>",
+    "data1" => "Hello, ",
     "data2" => function(string $name){
         echo "hi $name!";
     }
@@ -146,7 +146,7 @@ When using string casting, the cObject will convert it to JSON.
 use cObject\cObject;
 
 $cObject = new cObject([
-    "data1" => "Hello<br>",
+    "data1" => "Hello, ",
     "data2" => function(string $name){
         echo "You're Welcome $name!";
     }
