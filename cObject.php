@@ -71,6 +71,7 @@ class cObject implements \ArrayAccess
         }
         throw new \BadFunctionCallException("Method {$name} does not exists.");
     }
+    
     /**
      * @param string $name The name of property.
 
@@ -80,6 +81,7 @@ class cObject implements \ArrayAccess
     {
         return array_key_exists($name,$this->storedData);
     }
+
     /**
      * @param string $name The name of property.
      * @param mixed $value The value of property.
@@ -96,6 +98,7 @@ class cObject implements \ArrayAccess
         }
         $this->storedArrayData = self::cObjectToArray($this);
     }
+
     /**
      * @param string $name The name of property.
      *
@@ -154,11 +157,14 @@ class cObject implements \ArrayAccess
      *
      * @return array The output of cObjectToArray.
      */
-    public static function cObjectToArray(cObject $cObject): array
+    public static function cObjectToArray(cObject|array $cObject): array
     {
         $toArray = [];
-        foreach ($cObject->cObjectForceGet() as $key => $value) {
-            if ($value instanceof cObject) {
+        if($cObject instanceof cObject){
+            $cObject = $cObject->cObjectForceGet();
+        }
+        foreach ($cObject as $key => $value) {
+            if ($value instanceof cObject || is_array($value)) {
                 $value = self::cObjectToArray($value);
             }
             $toArray[$key] = $value;
@@ -178,7 +184,7 @@ class cObject implements \ArrayAccess
         } else {
             $toArray = [];
             foreach ($this->cObjectForceGet() as $key => $value) {
-                if ($value instanceof cObject) {
+                if ($value instanceof cObject || is_array($value)) {
                     $value = self::cObjectToArray($value);
                 }
                 $toArray[$key] = $value;
