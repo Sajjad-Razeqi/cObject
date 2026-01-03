@@ -1,7 +1,7 @@
 {
     "name": "sajjad-razeqi/cobject",
     "description": "cObject is a stdclass replacement class for callable objects and normal objects",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "type": "library",
     "license": "MIT",
     "autoload": {
@@ -17,3 +17,4 @@
     "minimum-stability": "stable",
     "require": {}
 }
+
