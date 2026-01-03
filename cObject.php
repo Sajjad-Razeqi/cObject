@@ -12,6 +12,11 @@ use cObject\None;
 class cObject implements \ArrayAccess
 {
     /**
+     * @var array $defaultNullReturn Default return null while key-data dosen't exist.
+     */
+    private bool $defaultNullReturn = false;
+
+    /**
      * @var array $storedData Stores all data added to the class.
      */
     private array $storedData = [];
@@ -23,8 +28,9 @@ class cObject implements \ArrayAccess
 
     /**
      * @param array $data Get first data to convert to cObject.
+     * @param boolean $default_null_return Set default return null while key-data dosen't exist.
      */
-    public function __construct(array $data = [])
+    public function __construct(array $data = [], bool $default_null_return = false)
     {
         if (array_keys($data) === range(0, count($data) - 1)) {
             $createArray = [];
@@ -47,6 +53,7 @@ class cObject implements \ArrayAccess
                 }
             }
         }
+        $this->defaultNullReturn = $default_null_return;
         $this->storedArrayData = self::cObjectToArray($this);
     }
 
@@ -62,16 +69,18 @@ class cObject implements \ArrayAccess
     public function __call(string $name, array $arguments): mixed
     {
         $callable = null;
-        if (array_key_exists($name,$this->storedData)) {
+        if (\array_key_exists($name, $this->storedData)) {
             $callable = $this->storedData[$name];
             if (!is_callable($callable)) {
                 throw new \BadMethodCallException("Method {$name} is not callable.");
             }
             return call_user_func_array($callable, $arguments);
+        } elseif ($this->defaultNullReturn) {
+            return null;
         }
         throw new \BadFunctionCallException("Method {$name} does not exists.");
     }
-    
+
     /**
      * @param string $name The name of property.
 
@@ -79,7 +88,7 @@ class cObject implements \ArrayAccess
      */
     public function __isset($name): bool
     {
-        return array_key_exists($name,$this->storedData);
+        return \array_key_exists($name, $this->storedData);
     }
 
     /**
@@ -90,7 +99,7 @@ class cObject implements \ArrayAccess
      */
     public function __set(string $name, mixed $value): void
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             $getAll = new cObject($value);
             $this->storedData[$name] = $getAll->cObjectGetAll();
         } else {
@@ -106,7 +115,9 @@ class cObject implements \ArrayAccess
      */
     public function __unset(string $name): void
     {
-        unset($this->storedData[$name]);
+        if (isset($this->storedData[$name])) {
+            unset($this->storedData[$name]);
+        }
         $this->storedArrayData = self::cObjectToArray($this);
     }
 
@@ -119,8 +130,12 @@ class cObject implements \ArrayAccess
      */
     public function &__get(string $name): mixed
     {
-        if (array_key_exists($name,$this->storedData)) {
-            return $this->storedData[$name];
+        if (\array_key_exists($name, $this->storedData)) {
+            $ref = &$this->storedData[$name];
+            return $ref;
+        } elseif ($this->defaultNullReturn) {
+            $null = null;
+            return $null;
         }
         throw new \OutOfBoundsException("Property or Method {$name} does not exists.");
     }
@@ -160,7 +175,7 @@ class cObject implements \ArrayAccess
     public static function cObjectToArray(cObject|array $cObject): array
     {
         $toArray = [];
-        if($cObject instanceof cObject){
+        if ($cObject instanceof cObject) {
             $cObject = $cObject->cObjectForceGet();
         }
         foreach ($cObject as $key => $value) {
@@ -210,8 +225,10 @@ class cObject implements \ArrayAccess
                 $this->storedArrayData = self::cObjectToArray($this);
                 return $this->storedData;
             } else {
-                if (array_key_exists($name,$this->storedData)) {
+                if (array_key_exists($name, $this->storedData)) {
                     return $this->storedData[$name];
+                } elseif ($this->defaultNullReturn) {
+                    return null;
                 }
                 throw new \OutOfBoundsException("Property or Method {$name} does not exists.");
             }
@@ -236,6 +253,17 @@ class cObject implements \ArrayAccess
         }
         $this->storedArrayData = self::cObjectToArray($this);
         return $this->storedData[$name];
+    }
+
+    /**
+     * @param bool $default_null_return Boolean flag to set the default return null behavior.
+     * 
+     *
+     * @return void
+     */
+    public function cObjectChangeDefaultNullReturn(bool $default_null_return): void
+    {
+        $this->defaultNullReturn = $default_null_return;
     }
 
 
@@ -265,7 +293,9 @@ class cObject implements \ArrayAccess
      */
     public function offsetUnset($offset): void
     {
-        unset($this->storedData[$offset]);
+        if (isset($this->storedData[$offset])) {
+            unset($this->storedData[$offset]);
+        }
         $this->storedArrayData = self::cObjectToArray($this);
     }
 
@@ -278,8 +308,10 @@ class cObject implements \ArrayAccess
      */
     public function offsetGet($offset): mixed
     {
-        if (array_key_exists($offset,$this->storedData)) {
+        if (array_key_exists($offset, $this->storedData)) {
             return $this->storedData[$offset];
+        } elseif ($this->defaultNullReturn) {
+            return null;
         }
         throw new \OutOfBoundsException("Property or Method {$offset} does not exists.");
     }
@@ -291,6 +323,6 @@ class cObject implements \ArrayAccess
      */
     public function offsetExists($offset): bool
     {
-        return array_key_exists($offset,$this->storedData);
+        return \array_key_exists($offset, $this->storedData);
     }
 }
